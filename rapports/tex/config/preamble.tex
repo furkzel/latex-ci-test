@@ -1,0 +1,214 @@
+% ============================================
+% PRÉAMBULE - Configuration LaTeX du Projet
+% ============================================
+% Ce fichier contient tous les packages et configurations LaTeX.
+
+% ============================================
+% MISE EN PAGE
+% ============================================
+% Marges personnalisées avec plus d'espace à gauche (3cm) pour la reliure
+\usepackage[
+    a4paper,
+    top=2cm,
+    bottom=2cm,
+    left=3cm,
+    right=2cm,
+    marginparwidth=0pt
+]{geometry}
+
+% ============================================
+% PACKAGES GRAPHIQUES ET FIGURES
+% ============================================
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{tikz} % Pour créer des graphiques vectoriels, diagrammes et schémas personnalisés
+\usepackage{pgfplots} % Pour générer des graphiques de fonctions et des tracés scientifiques
+\pgfplotsset{compat=1.18}
+
+% Chemin des figures
+\graphicspath{{tex/figures/}} % Définit le répertoire par défaut pour les images
+
+% ============================================
+% PACKAGES POUR LE CODE SOURCE
+% ============================================
+\usepackage{listings}
+\usepackage{algorithm} % Pour créer des environnements flottants pour les algorithmes
+\usepackage[noend]{algpseudocode} % Pour écrire des algorithmes en pseudocode formel
+
+% Configuration de listings pour Python
+% We can use `minted' for syntax highlighting, but here is a basic setup with `listings` not used yet, but kept for potential future use
+\lstset{
+language=Python,
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue}\bfseries,
+commentstyle=\color{gray}\itshape,
+stringstyle=\color{red},
+numbers=left,
+numberstyle=\tiny\color{gray},
+stepnumber=1,
+numbersep=8pt,
+backgroundcolor=\color{white},
+showspaces=false,
+showstringspaces=false,
+showtabs=false,
+frame=single,
+rulecolor=\color{black},
+tabsize=4,
+captionpos=b,
+breaklines=true,
+breakatwhitespace=false,
+escapeinside={\%*}{*)},
+inputencoding=utf8,
+extendedchars=true,
+literate={é}{{\'e}}1 {è}{{\`e}}1 {ê}{{\^e}}1 {à}{{\`a}}1 {ù}{{\`u}}1 {û}{{\^u}}1 {ô}{{\^o}}1 {ï}{{\"i}}1 {ç}{{\c{c}}}1 % Support des caractères accentués français dans le code
+}
+
+% ============================================
+% PACKAGES MATHÉMATIQUES
+% ============================================
+\usepackage{amsmath, amsfonts, amssymb, amsthm}
+
+% ============================================
+% ENCODAGE ET POLICE
+% ============================================
+\usepackage{libertine}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp} % Support pour les ligatures œ, Œ et autres caractères spéciaux
+\usepackage[french]{babel} % Support de la langue française (césure, mise en forme)
+\usepackage{csquotes} % Gestion intelligente des guillemets selon le contexte linguistique
+
+% ============================================
+% HYPERLIENS ET RÉFÉRENCES
+% ============================================
+\usepackage{hyperref}
+% Configuration détaillée des hyperliens et métadonnées PDF
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=green,
+    pdftitle={Thèse de Master - CVaR},
+    pdfauthor={Votre Nom},
+    bookmarks=true,
+    bookmarksopen=true,
+    pdfpagemode=UseOutlines
+}
+\usepackage[normalem]{ulem}
+
+% ============================================
+% INDENTATION ET TITRES
+% ============================================
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{10pt}{20pt}
+
+\setcounter{secnumdepth}{3}
+
+% Contrôle des veuves et orphelines pour améliorer la typographie
+\widowpenalty=10000 % Évite les lignes isolées en haut de page
+\clubpenalty=10000 % Évite les lignes isolées en bas de page
+\raggedbottom % Permet une hauteur de page flexible pour éviter les espaces excessifs
+
+% ============================================
+% PACKAGES POUR LISTES
+% ============================================
+\usepackage{enumitem} % Contrôle avancé de la mise en forme des listes
+
+% ============================================
+% PACKAGES DE TABLEAUX
+% ============================================
+\usepackage{booktabs} % Tableaux de qualité professionnelle avec lignes élégantes
+\usepackage{multirow} % Fusion de cellules sur plusieurs lignes
+\usepackage{longtable} % Tableaux sur plusieurs pages
+\usepackage{array} % Amélioration des colonnes de tableaux
+\usepackage{tabularx} % Tableaux avec colonnes à largeur automatique
+
+% ============================================
+% PACKAGES POUR CAPTIONS
+% ============================================
+\usepackage{caption} % Personnalisation des légendes de figures et tableaux
+
+% ============================================
+% BIBLIOGRAPHIE
+% ============================================
+% Utilisation de biblatex avec biber pour une gestion avancée de la bibliographie
+\usepackage[
+    backend=biber,
+    style=numeric,
+    sorting=none,
+    maxbibnames=99
+]{biblatex}
+\addbibresource{tex/references/references.bib}
+
+% ============================================
+% COMMANDES PERSONNALISÉES
+% ============================================
+% Commande pour mettre du texte en rouge (notes)
+\newcommand{\nt}[1]{\textcolor{red}{#1}}
+
+% Ligne horizontale
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% ============================================
+% ENVIRONNEMENTS MATHÉMATIQUES
+% ============================================
+\newtheorem{theorem}{Th\'{e}or\`{e}me}
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollaire}
+
+\newtheorem{definition}{D\'{e}finition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{example}{Exemple}
+\newtheorem{remark}{Remarque}
+
+\def\proofname{D\'emonstration}
+
+% Environnements compatibles avec annexeA.tex (noms en français)
+\newtheorem{theoreme}[theorem]{Th\'{e}or\`{e}me}
+\newtheorem{lemme}[theorem]{Lemme}
+\newtheorem{corollaire}[theorem]{Corollaire}
+\newtheorem{exemple}[definition]{Exemple}
+\newtheorem{remarque}[definition]{Remarque}
+
+% ============================================
+% COMMANDES MATHÉMATIQUES PERSONNALISÉES
+% ============================================
+\newcommand{\N}{\mathbf{N}}     % Entiers naturels
+\newcommand{\R}{\mathbf{R}}     % Réels
+\newcommand{\C}{\mathbf{C}}     % Complexes
+\newcommand{\Z}{\mathbf{Z}}     % Entiers relatifs
+\newcommand{\Q}{\mathbf{Q}}     % Rationnels
+\newcommand{\E}{\mathbb{E}}     % Espérance mathématique
+\newcommand{\Prob}{\mathbb{P}}  % Mesure de probabilité
+
+% Opérateurs mathématiques pour l'analyse de risque
+\DeclareMathOperator{\Var}{Var} % Variance
+\DeclareMathOperator{\Cov}{Cov} % Covariance
+\DeclareMathOperator{\CVaR}{CVaR} % Conditional Value at Risk
+\DeclareMathOperator{\VaR}{VaR} % Value at Risk
+\DeclareMathOperator*{\argmin}{argmin} % Argument du minimum
+\DeclareMathOperator*{\argmax}{argmax} % Argument du maximum
+
+% Autres commandes utiles pour les notations mathématiques
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert} % Norme
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert} % Valeur absolue
+\newcommand{\inner}[2]{\left\langle#1,#2\right\rangle} % Produit scalaire
+
+% ============================================
+% RENOMMAGE DES SECTIONS
+% ============================================
+\renewcommand*\contentsname{Table des Matières}
+\renewcommand*\bibname{Références}
+
+% ============================================
+% SOME EXTRA CONFIGURATIONS
+% ============================================
+% ...

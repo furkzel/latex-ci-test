@@ -1,0 +1,71 @@
+% main.tex
+% Fichier principal pour la thèse de master
+% Auteur: [Votre nom]
+% Date: \today
+
+\documentclass[12pt,a4paper,oneside]{report}
+
+% Inclusion du préambule
+\input{tex/config/preamble}
+
+\begin{document}
+
+% ============================================
+% PAGES PRÉLIMINAIRES
+% ============================================
+
+% Page de titre
+\input{tex/config/titlepage}
+
+% Numérotation romaine pour les pages préliminaires
+\pagenumbering{roman}
+% ============================================
+
+% Résumé
+\input{tex/config/resume}
+
+% Abstract (en anglais)
+\input{tex/config/abstract}
+
+% Table des matières
+\tableofcontents
+
+% Liste des abréviations
+\input{tex/config/abreviations}
+
+% ============================================
+% CORPS PRINCIPAL
+% ============================================
+
+% Numérotation arabe pour le corps principal
+\pagenumbering{arabic}
+
+% Introduction
+\input{tex/chapitres/introduction}
+
+% Chapitre 1
+\input{tex/chapitres/chapitre1}
+
+% Chapitre 2
+\input{tex/chapitres/chapitre2}
+
+% Chapitre 3
+\input{tex/chapitres/chapitre3}
+
+% ============================================
+% BIBLIOGRAPHIE
+% ============================================
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliographie}
+\printbibliography
+
+% ============================================
+% ANNEXES
+% ============================================
+
+\appendix
+\input{tex/annexes/annexeA}
+
+\end{document}

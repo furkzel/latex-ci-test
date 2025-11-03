@@ -1,0 +1,61 @@
+% chapitre1.tex
+% Chapitre 1 - Objectifs du Projet
+
+\chapter{Objectifs du Projet}
+
+\section*{Contexte et motivation}
+La prise de décision dans un contexte d'incertitude et la quantification du risque se situent à la croisée de la théorie des probabilités, des statistiques et des mathématiques financières.
+Dans des domaines tels que la science actuarielle, la gestion de portefeuille et l'analyse de titres, il ne suffit pas de tenir compte uniquement du rendement attendu ; il faut également prendre en considération le comportement des \textbf{queues} et la distribution des résultats extrêmes.
+Dans ce contexte, la \textbf{Valeur à Risque Conditionnelle (CVaR)} apparaît comme une mesure cruciale du risque, quantifiant la perte moyenne dans la queue supérieure et étendant ainsi l'espérance classique à une forme sensible au risque.
+
+Au cœur de cette thèse se trouve une étude de la structure mathématique de cette mesure, en particulier sa relation avec l'analyse convexe, la dualité et la théorie de l'optimisation.
+Cette perspective révèle comment un concept probabiliste peut être exprimé et étudié comme une fonctionnelle convexe dans un cadre analytique.
+
+\section*{Motivation}
+
+CVaR joue un rôle central non seulement dans la gestion du risque financier, mais aussi dans des applications modernes telles que \textbf{la modélisation actuarielle, l'optimisation de portefeuilles d'assurance, les systèmes décisionnels basés sur les données, et même l'apprentissage adversarial}.
+Sa nature convexe permet une analyse mathématique claire et une mise en œuvre numérique efficace, faisant du CVaR un lien puissant entre la théorie et la pratique.
+
+La motivation de ce sujet repose sur deux aspects complémentaires :
+d'une part, une expérience professionnelle dans \textbf{l'analyse actuarielle et financière}, et d'autre part, un intérêt académique profond pour \textbf{la probabilité, les statistiques et les modèles robustes}.
+L'objectif final est d'acquérir une compréhension complète du risque du point de vue mathématique et data-driven.
+
+\section*{Objectif du Mémoire}
+
+Les objectifs principaux de ce travail sont :
+
+Ce travail vise à \textbf{reconstruire la définition du CVaR à partir de l'optimisation}, à montrer comment sa \textbf{formulation duale} apparaît par l'analyse convexe et le \textbf{principe min-max}, et à valider les résultats théoriques par des simulations intuitives et basées sur les données.
+
+Ainsi, le mémoire poursuit deux objectifs complémentaires :
+
+\begin{itemize}
+    \item \textbf{Objectif Théorique :} Déduire rigoureusement la représentation duale du CVaR en utilisant des outils d'analyse convexe, d'analyse fonctionnelle et de théorie de l'optimisation. Cela inclut l'étude des propriétés du CVaR en tant que fonctionnelle convexe et son lien avec d'autres mesures de risque.
+
+    \item \textbf{Objectif Pratique :} Mettre en œuvre des expériences numériques illustrant le comportement du CVaR dans différents contextes, et montrer son utilité dans la prise de décision en situation d'incertitude. Cela implique de simuler différentes distributions de pertes et d'évaluer la performance des stratégies basées sur le CVaR.
+\end{itemize}
+
+\subsection*{Objectif Principal}
+L'objectif principal de ce mémoire est de fournir une compréhension approfondie de la \textbf{structure mathématique du CVaR}, en mettant en lumière son rôle en tant que mesure de risque convexe et en démontrant comment cette structure peut être exploitée pour des applications pratiques dans la gestion du risque et la prise de décision sous incertitude.
+
+\subsection*{Objectifs Specifiques}
+Les objectifs spécifiques incluent :
+\begin{enumerate}
+    \item \textbf{Analyser :} Étudier les propriétés axiomatiques qui font du CVaR une mesure de risque \textit{cohérente} et \textit{convexe} ; mettre en évidence les différences essentielles avec la Value-at-Risk (VaR) (monotonie, sous-additivité, translation, homogénéité positive ; la VaR n'est pas toujours sous-additive) \cite{rockafellar2002}.
+    \item \textbf{Synthétiser :} Examiner en détail la formulation d'optimisation \textit{primale} du CVaR de Rockafellar-Uryasev, via la fonction \(F_{\alpha}(X,z)\) et l'identification de son minimiseur.
+    \item \textbf{Dériver / Reconstruire :} Reconstituer la \textit{représentation duale} du CVaR à l'aide d'outils d'analyse convexe (dualité de Fenchel, principe min-max) et en donner une interprétation intuitive (par exemple, comme \emph{mesure de probabilité de pire cas} qui met l'accent sur les queues de distribution).
+    \item \textbf{Vérifier :} Confirmer numériquement l'équivalence théorique \textit{primale-duale} sur des données synthétiques, à l'aide de Python et de \texttt{CVXPY} (expériences reproductibles) \cite{cvpxy_doc}.
+\end{enumerate}
+
+\section*{Scope et limitations}
+
+Cette étude se concentre principalement sur les fondements théoriques et la représentation duale du CVaR.
+D'autres mesures de risque telles que \textbf{les mesures de risque entropiques ou de distorsion} seront mentionnées pour fournir un point de comparaison, mais elles ne seront pas étudiées en détail.
+De même, le lien avec la \textbf{Distributionally Robust Optimization (DRO)} \cite{dro} et \textbf{l'apprentissage adversarial} sera abordé comme une extension possible plutôt qu'un objectif principal.
+
+La partie empirique reposera sur \textbf{des données synthétiques et de petite échelle} ; les applications sur des données réelles (assurance, santé, cybersécurité) seront laissées pour des travaux futurs.
+
+
+\section*{Outcomes attendus}
+
+À la fin de ce mémoire, la \textbf{structure convexe sous-jacente à la définition probabiliste du CVaR} sera pleinement clarifiée, et sa pertinence pour \textbf{l'évaluation du risque et l'optimisation} sera démontrée.
+Le cadre obtenu combinera rigueur mathématique et intuition appliquée, offrant une base solide et extensible pour des recherches futures sur des modèles décisionnels robustes et sensibles à la distribution.

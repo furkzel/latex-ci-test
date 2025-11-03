@@ -1,0 +1,104 @@
+% chapitre3.tex
+% Chapitre 3 - Prochaines Étapes
+
+\chapter{Prochaines Étapes}
+\label{chap:prochaines_etapes}
+
+\section{Introduction}
+
+Ce chapitre présente les méthodes numériques développées pour le calcul et l'optimisation du CVaR. Nous proposons plusieurs algorithmes et analysons leur complexité et leur convergence.
+
+\section{À Court Terme}
+\label{sec:court_terme}
+
+\subsection{Approfondissement Théorique}
+Tout d'abord, il est essentiel de renforcer la compréhension théorique des fondements mathématiques du CVaR. Cela inclut l'étude approfondie des propriétés convexes, des théorèmes de dualité et des liens avec d'autres mesures de risque. Une revue de la littérature existante permettra d'identifier les lacunes et les opportunités pour des contributions originales. Premièrement, une analyse détaillée des travaux de Rockafellar et Uryasev (2002) sera effectuée pour comprendre les nuances de la formulation primale et duale du CVaR \cite{rockafellar2002}.
+
+En même temps, une exploration des extensions récentes du CVaR dans le contexte de l'optimisation robuste et de l'apprentissage automatique sera menée, en se basant sur des articles tels que  \textit{DRO}. \cite{dro}
+
+La théorie des mesures de risque cohérentes et convexes sera également approfondie, en examinant les axiomes qui sous-tendent ces concepts et en comparant le CVaR avec d'autres mesures telles que la VaR, les mesures de distorsion et les mesures entropiques.
+
+\subsection{Informatisation et Simulations}
+
+Des environnements expérimentaux appropriés sont mis en place afin de soutenir le processus d'apprentissage théorique. Il est nécessaire de traduire en algorithmes les formulations théoriques permettant de traiter des données indépendantes des ensembles de données et d'examiner les bibliothèques fournies par la communauté.
+
+Il peut également être nécessaire de fournir les dépendances appropriées pour le système d'exploitation de l'ordinateur et de configurer un environnement virtuel.
+
+\subsection{Prototypage Initial}
+Codage du premier prototype de la formulation primale $(\inf\{z+\dots\})$ et duale $(\sup\{\dots\})$ du CVaR en utilisant Python et CVXPY \cite{cvpxy_doc}. Validation de l'équivalence primale-duale sur des exemples simples avec des données synthétiques.
+
+\section{À Moyen Terme}
+\subsection{Codage du Problème Dual}
+Développement d'algorithmes plus sophistiqués pour le calcul du CVaR, en mettant l'accent sur l'efficacité et la robustesse. Exploration de méthodes d'optimisation stochastique et déterministe adaptées aux formulations primale et duale du CVaR. Le but est de transformer numériquement la formulation duale du CVaR en un algorithme efficace capable de gérer des ensembles de données plus importants et des distributions complexes.
+
+\subsection{Les Expériences Validantes}
+Réaliser des expériences numériques comparatives entre les solutions primale et duale pour différentes valeurs $\alpha$ et différentes distributions de pertes. Analyser la performance des algorithmes en termes de temps de calcul, de précision et de stabilité.
+
+\subsection{Expansion Structurale}
+Dans les prochaines périodes, le plan de la thèse devrait être le suivant, mais il peut être développé et modifié.
+
+
+\begin{enumerate}
+
+    \item \textbf{Introduction}
+          \begin{enumerate}
+              \item Motivation : crises financières et nécessité de la gestion du risque ; définition du risque.
+              \item Problématique : limites des mesures classiques (écart-type) et introduction du VaR.
+              \item Lien avec la VaR : limites du VaR (non-cohérence, absence de sous-additivité, incapacité à mesurer le \textit{risque de queue}).
+              \item Présentation du CVaR (ES) : cohérence, convexité, prise en compte des pertes extrêmes.
+              \item Objectifs et portée : convexité, représentation duale, validation numérique.
+              \item Structure du mémoire : aperçu des chapitres suivants.
+          \end{enumerate}
+
+    \item \textbf{Fondements Axiomatiques et Analyse Convexe}
+          \begin{enumerate}
+              \item Axiomes des mesures de risque (Artzner et al. 1999) : monotonie, translation, homogénéité positive, sous-additivité.
+              \item Mesures de risque convexes (Föllmer \& Schied, 2002) : introduction de la convexité.
+              \item Cohérence et convexité du CVaR : démonstration formelle.
+              \item Outils mathématiques : convexité, Fenchel-Moreau, dualité de Fenchel, minimax de Sion.
+          \end{enumerate}
+
+    \item \textbf{Représentations Primale et Duale du CVaR}
+          \begin{enumerate}
+              \item Formulation primale (Rockafellar \& Uryasev) :
+                    \begin{itemize}
+                        \item Fonction auxiliaire
+                              \( F_\alpha(X,z) = z + \frac{1}{1-\alpha}\mathbb{E}[(X-z)_+] \).
+                        \item Preuve que \(CVaR_\alpha(X)=\inf_{z\in\mathbb{R}}F_\alpha(X,z)\).
+                        \item Lien avec PL et optimisation.
+                    \end{itemize}
+              \item Dérivation duale :
+                    \begin{itemize}
+                        \item Dualité de Fenchel appliquée à la formulation primale.
+                        \item Représentation \(CVaR_\alpha(X)=\sup_{Q\in\mathcal{Q}}\mathbb{E}_Q[X]\).
+                        \item Interprétation de \(\mathcal{Q}\) comme mesures adversariales.
+                    \end{itemize}
+              \item Interprétation économique et lien avec la DRO.
+          \end{enumerate}
+
+    \item \textbf{Implémentation Numérique et Validation}
+          \begin{enumerate}
+              \item Environnement expérimental : Python, CVXPY, distributions simulées (normale, Student-t, log-normale).
+              \item Résolution primale :
+                    \begin{itemize}
+                        \item Approximation empirique \( \mathbb{E}[\cdot]\approx\frac{1}{N}\sum_{i=1}^N(\cdot) \).
+                        \item Conversion en PL et résolution avec CVXPY.
+                    \end{itemize}
+              \item Implémentation duale selon la dérivation théorique.
+              \item Validation :
+                    \begin{itemize}
+                        \item Comparaison primal vs dual pour \(\alpha\in\{0.90,0.95,0.99\}\).
+                        \item Vérification de la forte dualité (tolérance numérique).
+                        \item Visualisations : évolution du CVaR selon \(\alpha\).
+                    \end{itemize}
+          \end{enumerate}
+
+    \item \textbf{Discussion, Conclusion et Perspectives}
+          \begin{enumerate}
+              \item Synthèse des résultats.
+              \item Implications pour la finance et l'actuariat.
+              \item Limites : usage de données simulées, hypothèses modelisantes.
+              \item Perspectives : optimisation de portefeuille, approfondissement DRO, méthodes numériques avancées.
+          \end{enumerate}
+
+\end{enumerate}

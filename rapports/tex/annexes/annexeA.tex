@@ -1,0 +1,108 @@
+% annexeA.tex
+% Annexe A - Démonstrations mathématiques
+
+\chapter{Mathématiques Détaillées}
+\label{ann:demonstrations}
+
+\section{Préliminaires et Notations}
+\label{sec:preliminaires}
+
+\subsection{Cadre probabiliste}
+
+Soit $(\Omega, \mathcal{F}, \mathbb{P})$ un espace de probabilité complet muni d'une tribu $\mathcal{F}$ et d'une mesure de probabilité $\mathbb{P}$. Nous travaillons dans l'espace $L^1(\Omega, \mathcal{F}, \mathbb{P})$ des variables aléatoires réelles intégrables.
+
+\begin{definition}[Espace des variables aléatoires intégrables]
+    Soit
+    \[
+        L^1 = L^1(\Omega, \mathcal{F}, \mathbb{P}) = \left\{ X : \Omega \to \mathbb{R} \mid X \text{ est } \mathcal{F}\text{-mesurable et } \mathbb{E}[|X|] < \infty \right\}.
+    \]
+\end{definition}
+
+Dans le contexte financier, $X$ représente une variable aléatoire de perte (ou de coût), où des valeurs plus élevées indiquent des pertes plus importantes.
+
+\subsection{Définitions fondamentales}
+
+\begin{definition}[Fonction de répartition]
+    Pour $X \in L^1$, la fonction de répartition est définie par
+    \[
+        F_X(x) = \mathbb{P}(X \leq x), \quad x \in \mathbb{R}.
+    \]
+\end{definition}
+
+\begin{definition}[Quantile et VaR]
+    Pour $\alpha \in (0,1)$, le quantile d'ordre $\alpha$ (ou Value-at-Risk) est défini par
+    \[
+        \VaR_\alpha(X) = \inf\{x \in \mathbb{R} : F_X(x) \geq \alpha\} = F_X^{-1}(\alpha).
+    \]
+\end{definition}
+
+\begin{definition}[CVaR - Définition par espérance conditionnelle]
+    \label{def:cvar-esperance}
+    Pour $\alpha \in (0,1)$ et $X \in L^1$, la Conditional Value-at-Risk (CVaR) ou Expected Shortfall (ES) est définie par
+    \[
+        \CVaR_\alpha(X) = \mathbb{E}[X \mid X \geq \VaR_\alpha(X)].
+    \]
+\end{definition}
+
+\begin{definition}[CVaR - Représentation intégrale]
+    \label{def:cvar-integrale}
+    Pour une variable aléatoire $X$ avec fonction de répartition continue, le CVaR peut également être exprimé comme
+    \[
+        \CVaR_\alpha(X) = \frac{1}{1-\alpha} \int_\alpha^1 \VaR_\beta(X) \, d\beta.
+    \]
+\end{definition}
+
+\begin{definition}[CVaR - Représentation duale de Rockafellar-Uryasev]
+    \label{def:cvar-dual}
+    Pour tout $X \in L^1$ et $\alpha \in (0,1)$,
+    \[
+        \CVaR_\alpha(X) = \min_{t \in \mathbb{R}} \left\{ t + \frac{1}{1-\alpha} \mathbb{E}[(X-t)_+] \right\},
+    \]
+    où $(x)_+ = \max(x, 0)$ désigne la partie positive.
+\end{definition}
+
+\begin{lemme}[Équivalence des définitions]
+    \label{lem:equivalence-definitions}
+    Les Définitions \ref{def:cvar-esperance}, \ref{def:cvar-integrale} et \ref{def:cvar-dual} sont équivalentes.
+\end{lemme}
+
+\textit{On prouvera chaque axiome séparément à deuxieme rapport.}
+
+\subsection{Axiomes des mesures de risque cohérentes}
+
+\begin{definition}[Mesure de risque cohérente]
+    \label{def:mesure-coherente}
+    Une fonctionnelle $\rho : L^1 \to \mathbb{R}$ est appelée mesure de risque cohérente si elle satisfait les quatre axiomes suivants :
+
+    \begin{description}
+        \item[\textbf{(A1) Monotonie :}] Pour tous $X, Y \in L^1$,
+              \[
+                  X \leq Y \text{ p.s.} \implies \rho(X) \leq \rho(Y).
+              \]
+
+        \item[\textbf{(A2) Sous-additivité :}] Pour tous $X, Y \in L^1$,
+              \[
+                  \rho(X + Y) \leq \rho(X) + \rho(Y).
+              \]
+
+        \item[\textbf{(A3) Homogénéité positive :}] Pour tout $X \in L^1$ et tout $\lambda \geq 0$,
+              \[
+                  \rho(\lambda X) = \lambda \rho(X).
+              \]
+
+        \item[\textbf{(A4) Invariance par translation :}] Pour tout $X \in L^1$ et tout $c \in \mathbb{R}$,
+              \[
+                  \rho(X + c) = \rho(X) + c.
+              \]
+    \end{description}
+\end{definition}
+
+\section{Théorème Principal : Cohérence du CVaR}
+\label{sec:theoreme-coherence}
+
+\begin{theoreme}[Cohérence du CVaR]
+    \label{thm:coherence-cvar}
+    Pour tout $\alpha \in (0,1)$, la fonctionnelle $\CVaR_\alpha : L^1 \to \mathbb{R}$ est une mesure de risque cohérente, c'est-à-dire qu'elle satisfait les axiomes (A1)-(A4).
+\end{theoreme}
+
+\textit{On prouvera chaque axiome séparément à deuxieme rapport.}

@@ -1,0 +1,126 @@
+% chapitre2.tex
+% Chapitre 2 - Resultats Préliminaires
+
+\chapter{Resultats Préliminaires}
+\label{chap:fondements}
+
+\section{Introduction}
+
+Ce chapitre présente les fondements théoriques essentiels pour comprendre la formulation mathématique et la représentation duale de la CVaR. Nous introduisons les concepts clés, les définitions formelles, et passons en revue les travaux connexes dans le domaine.
+
+\subsection{Revue de la littérature et travaux connexes}
+\label{sec:revue_litterature}
+
+Les articles fondamentaux du sujet sont ceux de Rockafellar \& Uryasev (2000), Artzner et al. (1999) \cite{rockafellar2002} et Föllmer \& Schied (2002) \cite{FoellmerSchied2002}. Ces travaux établissent les bases de la théorie des mesures de risque cohérentes et convexes, en mettant l'accent sur la valeur à risque conditionnelle (CVaR). Ils démontrent que le CVaR satisfait aux axiomes de cohérence et fournissent une formulation d'optimisation primale pour le CVaR. Le cadre théorique du mémoire est construit autour de ces travaux majeurs. En complément, l'ouvrage \textit{Against the Gods: The Remarkable Story of Risk} \cite{Bernstein1998} peut être considéré comme une référence essentielle, permettant de situer le développement historique du domaine et la motivation scientifique qui l'accompagne.
+
+\section{Définition du Problème}
+
+Nous pouvons chercher trois réponses aux questions suivantes :
+\begin{itemize}
+    \item \textbf{Convexité :} Pourquoi le CVaR est-il une mesure de risque convexe ?
+    \item \textbf{Représentation duale :} Comment le CVaR peut-il être représenté en utilisant la dualité de Fenchel-Legendre ?
+    \item \textbf{Formulation computationnelle :} Quelles sont les méthodes computationnelles efficaces pour évaluer et optimiser le CVaR dans des contextes pratiques ?
+\end{itemize}
+
+Plus précisément,
+
+\begin{quote}
+    Dans un contexte où des données relatives à l'incertitude et aux lois de probabilité sont disponibles, l'objectif est d'analyser le fonctionnel de la CVaR, qui est une mesure de risque cohérente pour une variable de perte $X$, de préciser sa définition fondée sur l'optimisation et d'en déduire mathématiquement la représentation duale.
+\end{quote}
+
+Les deux buts principaux sont donc :
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Définition basée sur l'optimisation :}
+          Soit $X$ une variable aléatoire à valeurs réelles sur un espace de probabilité $(\Omega, \mathcal{F}, P)$ représentant des pertes potentielles. La CVaR au niveau de confiance $\alpha \in (0,1)$ est définie comme
+          \begin{equation}
+              \mathrm{CVaR}_\alpha(X) =
+              \inf_{z \in \mathbb{R}}
+              \left\{
+              z + \frac{1}{1-\alpha} \mathbb{E}[(X - z)_+]
+              \right\},
+              \label{eq:cvar_def}
+          \end{equation}
+          où $(X - z)_+ = \max(X - z, 0)$. Cette formulation met en évidence le CVaR en tant que
+          problème d'optimisation convexe.
+
+    \item \textbf{Formulation duale :}
+          L'objectif est d'exprimer le CVaR comme un problème d'espérance robuste, c'est-à-dire,
+          \begin{equation}
+              \mathrm{CVaR}_\alpha(X) =
+              \sup_{Q \in \mathcal{Q}_\alpha}
+              \mathbb{E}_Q[X],
+              \label{eq:cvar_dual}
+          \end{equation}
+          où $\mathcal{Q}_\alpha$ est l'ensemble des mesures de probabilité absolument continues
+          par rapport à $P$ telles que
+          \[
+              0 \leq \frac{dQ}{dP} \leq \frac{1}{1-\alpha}
+              \quad \text{et} \quad
+              \mathbb{E}_P\!\left[\frac{dQ}{dP}\right] = 1.
+          \]
+\end{itemize}
+
+\section{Fondation Théorique}
+
+Une mesure de risque $\rho : L^p \rightarrow \mathbb{R}$ est dite \textit{cohérente} si elle satisfait les propriétés de \textbf{monotonie, invariance par translation, homogénéité positive} et \textbf{sous-additivité} \cite{coherentrisk1999}.
+
+Le CVaR est une mesure de risque cohérente prototypique, à la fois convexe et continue par rapport aux perturbations de distribution. Rockafellar et Uryasev (2000) ont introduit la fonction auxiliaire suivante :
+
+\begin{equation}
+    F_\alpha(x,t)
+    = t + \frac{1}{1-\alpha} \mathbb{E}\!\big[(f(x,Y) - t)_+\big],
+    \label{eq:F_aux}
+\end{equation}
+où $f(x,Y)$ représente la perte associée à la décision $x$ sous un résultat aléatoire $Y$.
+
+Ils ont démontré le \textbf{Théorème Fondamental du CVaR} :
+\begin{equation}
+    \phi_\alpha(x)
+    = \min_{t\in\mathbb{R}} F_\alpha(x,t),
+    \qquad
+    \min_{x\in X}\phi_\alpha(x)
+    = \min_{(x,t)\in X\times\mathbb{R}} F_\alpha(x,t).
+    \label{eq:cvar_fundamental}
+\end{equation}
+
+\subsection{De la Définition au Problème d'Optimisation}
+
+Considérons une fonction de perte $f(x,y)$ représentant la perte financière pour un vecteur décisionnel $x$ sous un scénario de marché $y$. Le problème de minimisation du CVaR basé sur l'optimisation peut s'écrire comme :
+
+\begin{equation}
+    \min_{(x,t)\in X\times\mathbb{R}}
+    \left[
+        t + \frac{1}{1-\alpha}
+        \int_{\mathbb{R}^m}
+        (f(x,y)-t)_+ p(y)\,dy
+        \right].
+    \label{eq:cvar_integral}
+\end{equation}
+
+Pour des scénarios discrets $\{y_j\}_{j=1}^J$ avec probabilités $\pi_j$, le problème devient
+\begin{equation}
+    \begin{aligned}
+        \min_{x,t,z_j} \quad
+         & t + \frac{1}{(1-\alpha)} \sum_{j=1}^{J} \pi_j z_j \\
+        \text{s.t.} \quad
+         & z_j \ge f(x, y_j) - t,                            \\
+         & z_j \ge 0, \quad j = 1, \dots, J.
+    \end{aligned}
+    \label{eq:cvar_lp}
+\end{equation}
+
+Cette formulation constitue un problème d'optimisation convexe linéaire par morceaux. La convexité de $F_\alpha(x,t)$ garantit l'existence d'un optimum global \cite{rockafellar2002}.
+
+
+\subsection{Formulation Duale}
+
+En appliquant la dualité de Fenchel ou les techniques de Lagrange à \eqref{eq:cvar_integral}, on obtient la représentation duale \eqref{eq:cvar_dual}, qui interprète le CVaR comme la perte espérée dans le \textit{pire cas} parmi toutes les distributions dont la densité par rapport à $P$ est bornée par $(1-\alpha)^{-1}$.
+
+
+\section{Méthodes Computationnelles}
+L'évaluation et l'optimisation du CVaR peuvent être effectuées efficacement en utilisant des algorithmes de Programmation Linéaire (PL) pour la formulation discrète \eqref{eq:cvar_lp}. Pour des distributions continues, des méthodes de Monte Carlo (MC) ou des techniques de quadrature numérique sont employées pour approximer l'intégrale dans \eqref{eq:cvar_integral}. Des algorithmes de gradient stochastique peuvent également être utilisés pour optimiser le CVaR dans des espaces de décision de grande dimension.
+
+Compte tenu de tous ces problèmes d'optimisation liés à la distribution des probabilités, il est préférable de travailler avec Python et les modules associés, mais l'utilisation de R peut également varier en fonction des activités.
+
+
+
