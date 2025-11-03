@@ -1,0 +1,177 @@
+name: Build PDF and Generate Diff
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build-pdf:
+    name: Build PDF and Generate Diff
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:latest
+    outputs:
+      build_skipped: ${{ steps.build.outputs.build_skipped }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Install extra tools
+        run: |
+          set -e
+          apt-get update -qq
+          apt-get install -y -qq git latexdiff
+
+      - name: Build rapports/main.tex
+        id: build
+        run: |
+          set -e
+          TEX_DIR="rapports"
+          TEX_NAME="main"
+          TEX_PATH="${TEX_DIR}/${TEX_NAME}.tex"
+
+          echo "🔍 Looking for ${TEX_PATH}"
+          if [ ! -f "${TEX_PATH}" ]; then
+            echo "⚠️ ${TEX_PATH} not found."
+            echo "build_skipped=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "🔨 First LaTeX pass (aux/bcf)"
+          cd "${TEX_DIR}"
+          # LuaLaTeX pass-1
+          lualatex -interaction=nonstopmode -halt-on-error "${TEX_NAME}.tex"
+
+          # Bibliography handling:
+          # If a .bcf exists use biber; else try bibtex (compat mode)
+          if [ -f "${TEX_NAME}.bcf" ]; then
+            echo "📚 Running biber"
+            biber "${TEX_NAME}" || echo "⚠️ Biber warnings (continuing)..."
+          elif [ -f "${TEX_NAME}.aux" ]; then
+            echo "📚 Running bibtex"
+            bibtex "${TEX_NAME}" || echo "⚠️ BibTeX warnings (continuing)..."
+          fi
+
+          echo "🔁 Second & third LaTeX passes"
+          lualatex -interaction=nonstopmode -halt-on-error "${TEX_NAME}.tex"
+          lualatex -interaction=nonstopmode -halt-on-error "${TEX_NAME}.tex"
+          cd -
+
+          ARTIFACT_DIR="/tmp/artifacts"
+          mkdir -p "${ARTIFACT_DIR}"
+          cp "${TEX_DIR}/${TEX_NAME}.pdf" "${ARTIFACT_DIR}/main_current.pdf"
+
+          echo "📊 Try generating diff vs origin/main"
+          if git rev-parse --verify origin/main >/dev/null 2>&1; then
+            if git show origin/main:"${TEX_PATH}" > /tmp/previous.tex 2>/dev/null; then
+              echo "📝 latexdiff origin/main..HEAD"
+              latexdiff "/tmp/previous.tex" "${TEX_PATH}" > "/tmp/diff.tex"
+
+              cd "${TEX_DIR}"
+              cp /tmp/diff.tex .
+              if lualatex -interaction=nonstopmode diff.tex && lualatex -interaction=nonstopmode diff.tex; then
+                if [ -f "diff.pdf" ]; then
+                  cp "diff.pdf" "${ARTIFACT_DIR}/main_diff.pdf"
+                  echo "✅ Diff PDF generated"
+                else
+                  echo "⚠️ diff.pdf not found after compile"
+                fi
+              else
+                echo "⚠️ latexdiff compile failed (continuing)"
+              fi
+              rm -f diff.*
+              cd -
+            else
+              echo "ℹ️ No previous main.tex on origin/main to diff against."
+            fi
+          fi
+
+          echo "✅ PDF generation completed"
+          echo "build_skipped=false" >> $GITHUB_OUTPUT
+
+      - name: Upload PDF Artifacts
+        if: steps.build.outputs.build_skipped == 'false'
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: pdfs
+          path: /tmp/artifacts/
+
+  commit-pdfs:
+    name: Commit PDFs into rapports/output (optional)
+    runs-on: ubuntu-latest
+    needs: build-pdf
+    if: needs.build-pdf.outputs.build_skipped == 'false' && github.event_name == 'pull_request'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4.1.1
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4.1.7
+        with:
+          name: pdfs
+          path: /tmp/artifacts
+
+      - name: Copy PDFs to rapports/output
+        run: |
+          DEST="rapports/output"
+          mkdir -p "${DEST}"
+          [ -f /tmp/artifacts/main_current.pdf ] && cp /tmp/artifacts/main_current.pdf "${DEST}/main_current.pdf"
+          [ -f /tmp/artifacts/main_diff.pdf ] && cp /tmp/artifacts/main_diff.pdf "${DEST}/main_diff.pdf"
+
+      - name: Commit and push PDFs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add rapports/output/*.pdf || true
+
+          if git diff --staged --quiet; then
+            echo "ℹ️ No PDF changes to commit."
+          else
+            git commit -m "docs: add generated PDFs for review [skip ci]"
+            git push
+          fi
+
+  comment-pr:
+    name: Comment PR with PDF paths
+    runs-on: ubuntu-latest
+    needs: commit-pdfs
+    if: always() && github.event_name == 'pull_request'
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Comment on PR
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const branch = context.payload.pull_request.head.ref;
+            const prNumber = context.issue.number;
+            const repoOwner = context.repo.owner;
+            const repoName = context.repo.repo;
+
+            const body = `
+            ## 📄 PDF Build Results
+            ✅ **LaTeX compilation completed!**
+
+            ### 📥 Review PDFs in repo
+            - \`rapports/output/main_current.pdf\`
+            - \`rapports/output/main_diff.pdf\` *(if previous version existed)*
+
+            You can also download artifacts from the **Actions** tab.
+            `;
+            await github.rest.issues.createComment({
+              owner: repoOwner,
+              repo: repoName,
+              issue_number: prNumber,
+              body,
+            });
